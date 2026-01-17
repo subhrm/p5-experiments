@@ -1,0 +1,25 @@
+{
+  "name": "p5-experiments",
+  "version": "1.0.0",
+  "description": "Experiments with P5",
+  "homepage": "https://github.com/subhrm/p5-experiments#readme",
+  "bugs": {
+    "url": "https://github.com/subhrm/p5-experiments/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subhrm/p5-experiments.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  }
+}
