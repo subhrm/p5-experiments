@@ -4,12 +4,12 @@
  */
 import p5 from 'p5';
 
-const sketch = (p) => {
-    let particles = [];
-    let numParticles = 2000;
-    let noiseScale = 0.01;
+const sketch = (p: p5): void => {
+    let particles: p5.Vector[] = [];
+    const numParticles: number = 2000;
+    const noiseScale: number = 0.01;
 
-    p.setup = () => {
+    p.setup = (): void => {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight - 60);
         canvas.parent('canvas-container');
 
@@ -24,7 +24,7 @@ const sketch = (p) => {
         p.background(0);
     };
 
-    p.draw = () => {
+    p.draw = (): void => {
         // Create trail effect with translucent overlay
         p.noStroke();
         p.fill(0, 0, 0, 0.05);
@@ -32,21 +32,21 @@ const sketch = (p) => {
 
         // Update and draw particles
         for (let i = 0; i < numParticles; i++) {
-            let particle = particles[i];
+            const particle = particles[i];
 
             // Get noise value based on position
-            let n = p.noise(particle.x * noiseScale, particle.y * noiseScale);
-            let angle = p.map(n, 0, 1, 0, p.TWO_PI * 2);
+            const n = p.noise(particle.x * noiseScale, particle.y * noiseScale);
+            const angle = p.map(n, 0, 1, 0, p.TWO_PI * 2);
 
             // Create velocity vector from angle
-            let v = p5.Vector.fromAngle(angle);
+            const v = p5.Vector.fromAngle(angle);
             v.setMag(1);
 
             // Move particle
             particle.add(v);
 
             // Draw particle with color based on angle
-            let hue = p.map(angle, 0, p.TWO_PI * 2, 0, 360);
+            const hue = p.map(angle, 0, p.TWO_PI * 2, 0, 360);
             p.stroke(hue, 80, 100, 0.8);
             p.strokeWeight(2);
             p.point(particle.x, particle.y);
@@ -59,11 +59,11 @@ const sketch = (p) => {
         }
     };
 
-    const onScreen = (v) => {
+    const onScreen = (v: p5.Vector): boolean => {
         return v.x >= 0 && v.x <= p.width && v.y >= 0 && v.y <= p.height;
     };
 
-    p.windowResized = () => {
+    p.windowResized = (): void => {
         p.resizeCanvas(p.windowWidth, p.windowHeight - 60);
         p.background(0);
     };

@@ -4,8 +4,21 @@
  */
 import p5 from 'p5';
 
+/**
+ * Particle configuration interface
+ */
+interface ParticleConfig {
+    particlesPerClick: number;
+    particleMinSize: number;
+    particleMaxSize: number;
+    gravity: number;
+    friction: number;
+    fadeSpeed: number;
+    velocityRange: number;
+}
+
 // Configuration
-const config = {
+const config: ParticleConfig = {
     particlesPerClick: 30,
     particleMinSize: 4,
     particleMaxSize: 12,
@@ -15,15 +28,22 @@ const config = {
     velocityRange: 8
 };
 
-const sketch = (p) => {
-    // Particle storage
-    let particles = [];
-
+const sketch = (p: p5): void => {
     /**
-     * Particle class
+     * Particle class with physics-based animation
      */
     class Particle {
-        constructor(x, y) {
+        pos: p5.Vector;
+        vel: p5.Vector;
+        acc: p5.Vector;
+        size: number;
+        initialSize: number;
+        hue: number;
+        saturation: number;
+        brightness: number;
+        lifespan: number;
+
+        constructor(x: number, y: number) {
             this.pos = p.createVector(x, y);
             // Random velocity in all directions
             this.vel = p.createVector(
@@ -45,7 +65,7 @@ const sketch = (p) => {
             this.lifespan = 255;
         }
 
-        update() {
+        update(): void {
             // Apply physics
             this.vel.add(this.acc);
             this.vel.mult(config.friction);
@@ -58,7 +78,7 @@ const sketch = (p) => {
             this.size = p.map(this.lifespan, 0, 255, 0, this.initialSize);
         }
 
-        display() {
+        display(): void {
             p.noStroke();
             // Use alpha from lifespan
             p.colorMode(p.HSB, 360, 100, 100, 255);
@@ -66,15 +86,18 @@ const sketch = (p) => {
             p.ellipse(this.pos.x, this.pos.y, this.size);
         }
 
-        isDead() {
+        isDead(): boolean {
             return this.lifespan <= 0;
         }
     }
 
+    // Particle storage
+    let particles: Particle[] = [];
+
     /**
      * P5.js Setup
      */
-    p.setup = () => {
+    p.setup = (): void => {
         // Create canvas that fills the container
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight - 60);
         canvas.parent('canvas-container');
@@ -89,7 +112,7 @@ const sketch = (p) => {
     /**
      * P5.js Draw Loop
      */
-    p.draw = () => {
+    p.draw = (): void => {
         // Dark background with slight trail effect
         p.colorMode(p.RGB);
         p.background(10, 10, 15, 40);
@@ -118,7 +141,7 @@ const sketch = (p) => {
     /**
      * Mouse click handler
      */
-    p.mousePressed = () => {
+    p.mousePressed = (): void => {
         // Don't spawn particles if clicking on header
         if (p.mouseY < 0) return;
 
@@ -130,10 +153,11 @@ const sketch = (p) => {
 
     /**
      * Touch handler for mobile
+     * Note: touchStarted exists in p5 but is missing from type definitions
      */
-    p.touchStarted = () => {
+    (p as unknown as { touchStarted: () => boolean }).touchStarted = (): boolean => {
         if (p.touches.length > 0) {
-            const touch = p.touches[0];
+            const touch = p.touches[0] as { x: number; y: number };
             if (touch.y > 60) { // Below header
                 for (let i = 0; i < config.particlesPerClick; i++) {
                     particles.push(new Particle(touch.x, touch.y - 60));
@@ -146,7 +170,7 @@ const sketch = (p) => {
     /**
      * Handle window resize
      */
-    p.windowResized = () => {
+    p.windowResized = (): void => {
         p.resizeCanvas(p.windowWidth, p.windowHeight - 60);
     };
 };

@@ -5,35 +5,35 @@
  */
 import p5 from 'p5';
 
-const sketch = (p) => {
+const sketch = (p: p5): void => {
     // Lorenz system variables
-    let x = 0.01;
-    let y = 0;
-    let z = 0;
+    let x: number = 0.01;
+    let y: number = 0;
+    let z: number = 0;
 
     // Lorenz constants
-    const sigma = 10;
-    const rho = 28;
-    const beta = 8.0 / 3.0;
+    const sigma: number = 10;
+    const rho: number = 28;
+    const beta: number = 8.0 / 3.0;
 
     // Store path history
-    let points = [];
+    let points: p5.Vector[] = [];
 
-    p.setup = () => {
+    p.setup = (): void => {
         // Use WEBGL for 3D rendering
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight - 60, p.WEBGL);
         canvas.parent('canvas-container');
         p.colorMode(p.HSB, 255, 255, 255);
     };
 
-    p.draw = () => {
+    p.draw = (): void => {
         p.background(0);
 
         // Calculate differentials (Lorenz equations)
-        const dt = 0.01;
-        const dx = (sigma * (y - x)) * dt;
-        const dy = (x * (rho - z) - y) * dt;
-        const dz = (x * y - beta * z) * dt;
+        const dt: number = 0.01;
+        const dx: number = (sigma * (y - x)) * dt;
+        const dy: number = (x * (rho - z) - y) * dt;
+        const dz: number = (x * y - beta * z) * dt;
 
         // Update position
         x += dx;
@@ -79,7 +79,7 @@ const sketch = (p) => {
         }
     };
 
-    p.windowResized = () => {
+    p.windowResized = (): void => {
         p.resizeCanvas(p.windowWidth, p.windowHeight - 60);
     };
 };
